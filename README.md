@@ -7,7 +7,11 @@
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078D4">
 </p>
 
-A native **Windows** network monitor and application firewall in the spirit of Little Snitch — a port of the macOS app [ImanMontajabi/Rat](https://github.com/ImanMontajabi/Rat). It shows which app talks to which server, asks before unknown connections, and enforces allow/deny rules with Windows Firewall.
+A native **Windows** network monitor and application firewall in the spirit of Little Snitch - a port of the macOS app [ImanMontajabi/Rat](https://github.com/ImanMontajabi/Rat). It shows which app talks to which server, asks before unknown connections, and enforces allow/deny rules with Windows Firewall.
+
+<p align="center">
+  <img src="docs/dashboard.png" alt="Rat for Windows dashboard" width="1000">
+</p>
 
 ## Download
 

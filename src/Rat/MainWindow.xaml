@@ -160,7 +160,8 @@
 
             <Border Grid.Column="4" Background="{StaticResource Surface}" BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="1" CornerRadius="8">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14,12">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14,12"
+                              TextElement.Foreground="{StaticResource Fg}">
                     <StackPanel>
                         <TextBlock Text="Summary" Style="{StaticResource Title}"/>
                         <TextBlock x:Name="tbSummarySub" Style="{StaticResource MutedText}" Margin="0,2,0,10"/>
@@ -175,14 +176,14 @@
                                     BorderThickness="1" CornerRadius="6" Padding="10,8">
                                 <StackPanel>
                                     <TextBlock Text="Sent" Style="{StaticResource MutedText}" FontSize="11"/>
-                                    <TextBlock x:Name="tbSent" FontSize="15" FontWeight="SemiBold" Foreground="#C9A8FF"/>
+                                    <TextBlock x:Name="tbSent" FontSize="15" FontWeight="SemiBold" Foreground="#DCCBFF"/>
                                 </StackPanel>
                             </Border>
                             <Border Grid.Column="2" Background="{StaticResource Surface2}" BorderBrush="{StaticResource BorderBrush}"
                                     BorderThickness="1" CornerRadius="6" Padding="10,8">
                                 <StackPanel>
                                     <TextBlock Text="Received" Style="{StaticResource MutedText}" FontSize="11"/>
-                                    <TextBlock x:Name="tbRecv" FontSize="15" FontWeight="SemiBold" Foreground="#8FB8FF"/>
+                                    <TextBlock x:Name="tbRecv" FontSize="15" FontWeight="SemiBold" Foreground="#A9CDFF"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
@@ -227,7 +228,7 @@
                                         <Image Source="{Binding Icon}" Width="14" Height="14" Margin="0,0,7,0"
                                                VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"
-                                                   VerticalAlignment="Center"/>
+                                                   Foreground="{StaticResource Fg}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="2" Text="{Binding Detail}" Foreground="{StaticResource Muted}"
                                                    FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0"/>
                                     </Grid>
@@ -244,7 +245,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" Foreground="{StaticResource Fg}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="1" Text="{Binding Detail}" Foreground="{StaticResource Muted}"
                                                    FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0"/>
                                     </Grid>
@@ -261,7 +262,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" Foreground="{StaticResource Fg}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="1" Text="{Binding Detail}" Foreground="{StaticResource Muted}"
                                                    FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0"/>
                                     </Grid>

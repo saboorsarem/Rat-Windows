@@ -6,7 +6,7 @@
     <SolidColorBrush x:Key="Surface2" Color="#1C2029"/>
     <SolidColorBrush x:Key="BorderBrush" Color="#2A2F3A"/>
     <SolidColorBrush x:Key="Fg" Color="#E6E8EB"/>
-    <SolidColorBrush x:Key="Muted" Color="#8B93A1"/>
+    <SolidColorBrush x:Key="Muted" Color="#A9B2C0"/>
     <SolidColorBrush x:Key="Accent" Color="#4C8DFF"/>
     <SolidColorBrush x:Key="Danger" Color="#E5534B"/>
     <SolidColorBrush x:Key="RowHover" Color="#20242D"/>

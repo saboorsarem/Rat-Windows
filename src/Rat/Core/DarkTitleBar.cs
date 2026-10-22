@@ -28,6 +28,11 @@ public static class DarkTitleBar
             int on = 1;
             if (DwmSetWindowAttribute(hwnd, 20, ref on, sizeof(int)) != 0)
                 DwmSetWindowAttribute(hwnd, 19, ref on, sizeof(int));
+            int black = 0;
+            DwmSetWindowAttribute(hwnd, 34, ref black, sizeof(int));
+            DwmSetWindowAttribute(hwnd, 35, ref black, sizeof(int));
+            int white = 0x00FFFFFF;
+            DwmSetWindowAttribute(hwnd, 36, ref white, sizeof(int));
         }
         catch { }
     }

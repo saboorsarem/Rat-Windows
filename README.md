@@ -1,66 +1,63 @@
 # Rat for Windows
 
-A network monitor and application firewall for **Windows**, ported from [ImanMontajabi/Rat](https://github.com/ImanMontajabi/Rat) (a Little Snitch-style monitor for macOS, MIT).
+<p>
+  <a href="https://github.com/saboorsarem/Rat-Windows/actions/workflows/build.yml"><img alt="Build" src="https://github.com/saboorsarem/Rat-Windows/actions/workflows/build.yml/badge.svg"></a>
+  <a href="https://github.com/saboorsarem/Rat-Windows/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/saboorsarem/Rat-Windows?label=release"></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+  <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078D4">
+</p>
+
+A native **Windows** network monitor and application firewall in the spirit of Little Snitch — a port of the macOS app [ImanMontajabi/Rat](https://github.com/ImanMontajabi/Rat). It shows which app talks to which server, asks before unknown connections, and enforces allow/deny rules with Windows Firewall.
 
 ## Download
 
-Releases carry `Rat-win-x64.exe` — one file, self-contained, no .NET install needed:
+Every release ships a single self-contained executable — no .NET install, no setup wizard:
 
-```
-https://github.com/saboorsarem/Rat-Windows/releases/latest/download/Rat-win-x64.exe
-```
+**[Rat-win-x64.exe](https://github.com/saboorsarem/Rat-Windows/releases/latest/download/Rat-win-x64.exe)** · [zip](https://github.com/saboorsarem/Rat-Windows/releases/latest/download/Rat-win-x64.zip)
 
-Unzip-free: run it, accept the UAC prompt (blocking needs admin), and a monitor window plus tray icon appear. The macOS original is at [saboorsarem/Rat](https://github.com/saboorsarem/Rat).
-
-
-> **The name** comes from the upstream project: "monitor your network and find the Rat." This is a **defensive** tool — it watches the outgoing connections of your own apps. It has no relation to remote access trojans.
-
-It shows which app talks to which server, asks before unknown connections, lets you allow or deny them with rules and lifetimes, and blocks denied servers with **Windows Firewall** plus a live connection cut.
+Run it, accept the UAC prompt (blocking needs admin), and the monitor opens with a tray icon. Windows 10/11 x64.
 
 ## Features
 
-- **Network monitor** — per-app list (app, open connections, servers) and a per-app connection inspector (server, reverse-DNS hostname, port, state, first seen). Auto-refresh every 2 s.
-- **Connection alerts** — **Silent Allow** is the default, so Rat never nags on first launch. Switch to **Ask mode** and a dialog appears for unknown connections: scope (*This app (any server)* by default, this server, any app for this server, this port) and lifetime (Once / Until quit / Forever), then Allow or Deny.
-- **Rules window** — all saved rules in one table (On, Action, App, Server, Port, Lifetime, Description) with manual add, delete and **JSON import/export**. The most specific rule wins and deny beats allow on a tie (`RulesEngine`).
-- **Firewall enforcement** — Deny adds an outbound Windows Firewall block rule for the server address (rule group `Rat`, idempotent: re-adding deletes the old one first) and cuts the live connection via `SetTcpEntry` (DELETE_TCB).
-- **Tray icon** — Rat keeps monitoring in the background after the window closes; tray shows the app, `Open`/`Exit`.
+| | |
+| --- | --- |
+| **Live monitor** | Per-app list (app, open connections, servers) with a connection inspector: server address, reverse-DNS hostname, port, state, first seen. Refreshes every 2 s. |
+| **Connection alerts** | Silent allow by default. In *Ask mode* unknown connections trigger a dialog: scope (*this app / any server*, this server, any app for this server, this port) and lifetime (*once*, *until quit*, *forever*), then Allow or Deny. |
+| **Rules** | Rule table with enable toggle, manual add/delete and JSON import/export. Most-specific rule wins; deny beats allow on a tie. |
+| **Enforcement** | Deny cuts the live connection (`SetTcpEntry` / DELETE_TCB) and adds an idempotent outbound block rule to Windows Firewall (group `Rat`). |
+| **Background** | Closing the window keeps monitoring in the tray; live down/up throughput in the toolbar. |
+| **Tests** | Rules-engine unit tests in CI on every build. |
+
+## How it works
+
+- Connections: `GetExtendedTcpTable` (IPv4, established / connecting) mapped to processes via the owning PID.
+- Hostnames: on-demand reverse DNS with a short timeout, cached per session. No offline geo database.
+- Blocking: `netsh advfirewall firewall add rule ... dir=out action=block remoteip=... group=Rat`, preceded by an idempotent delete of the same rule name.
+- Rules and settings: JSON in `%LocalAppData%\Rat\` (`rules.json`, `settings.json`), human-editable.
 
 ## Honest limits
 
-Like the upstream macOS app, Rat is **reactive**, not preventive:
+Like the upstream macOS app, Rat is **reactive**, not preventive — it sees a connection after it starts (no kernel filter driver), then cuts it and blocks the server.
 
-- It notices a connection **after** it starts (it has no kernel filter driver — no WFP callout). On Deny it cuts the connection and blocks the server address for the future.
-- A blocked address is blocked for **every** app, not just the one that triggered the alert — that is how Windows Firewall address rules work (same as the upstream `pf` table).
-- **IPv4 only.** No offline geo/world map (upstream bundles DB-IP; skipped here — hostnames come from on-demand reverse DNS).
-- **Administrator required** to enforce blocking — the app requests UAC elevation on launch.
-- Per-app traffic totals/sparklines and profiles with automatic network switching are not ported.
+- A blocked address is blocked for **every** app — that is how Windows Firewall address rules work (same as the upstream `pf` table).
+- IPv4 only. No offline world map, per-app traffic totals or profiles with automatic network switching (not ported).
+- Administrator rights required for enforcement — the manifest requests elevation at launch.
+- The app is not code-signed; SmartScreen may warn on first launch (`More info → Run anyway`).
 
-## Build and run
+## Build from source
 
 ```
 dotnet build
-dotnet test                          # rules-engine tests
-dotnet publish src/Rat -c Release   # produces Rat.exe
+dotnet test
+dotnet publish src/Rat -c Release -r win-x64 --self-contained true \
+  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
 ```
 
-Run the published `Rat.exe` (accept the UAC prompt). Data lives in `%LocalAppData%\Rat\rules.json` and `settings.json`.
+The icon asset is generated by `scripts/make-icon.ps1` (PowerShell + System.Drawing).
 
-Example `rules.json`:
+## Cleanup
 
-```json
-[
-  {
-    "Enabled": true,
-    "Action": "Allow",
-    "Lifetime": "Forever",
-    "AppPath": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
-    "Server": null,
-    "Port": null
-  }
-]
-```
-
-To clean up every firewall rule Rat ever added:
+Every firewall rule Rat adds is named `Rat block <ip>` in group `Rat`. Remove all of them with:
 
 ```
 netsh advfirewall firewall delete rule name=all group="Rat"
@@ -70,10 +67,20 @@ netsh advfirewall firewall delete rule name=all group="Rat"
 
 | Path | Contents |
 | --- | --- |
-| `src/Rat/Core` | Rules model + matching engine, `GetExtendedTcpTable` sampler, `SetTcpEntry` close, netsh blocker, JSON store, throughput sampler. |
-| `src/Rat` | WPF app: monitor, alert panel, rules window, rule editor, tray. |
-| `tests/Rat.Tests` | Rules-engine tests (specificity, deny-beats-allow, lifetime handling). |
+| `src/Rat/Core` | Rules model and matcher, connection sampler, connection cut, netsh blocker, JSON store, throughput. |
+| `src/Rat` | WPF app: monitor, alert, rules and rule-editor windows, dark theme, tray. |
+| `tests/Rat.Tests` | Rules-engine tests (specificity, deny-beats-allow, lifetimes, hostname/app-name matching). |
+
+## Roadmap
+
+- Preventive mode through a Windows Filtering Platform callout driver.
+- IPv6 connections.
+- Per-app traffic totals via ETW.
+- Profiles with automatic network switching.
 
 ## Credits
 
-Design and name by [ImanMontajabi/Rat](https://github.com/ImanMontajabi/Rat) (Little Snitch clone for macOS). MIT license.
+- Original design and app: [ImanMontajabi/Rat](https://github.com/ImanMontajabi/Rat) (macOS, MIT).
+- This port: MIT, see [LICENSE](LICENSE).
+
+> The name comes from the upstream project — "monitor your network and find the Rat". This is a defensive tool for your own machine, **not** a remote access trojan.

@@ -1,9 +1,10 @@
 <Window x:Class="Rat.RuleEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Add rule" Width="460" SizeToContent="Height"
-        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
-    <Grid Margin="14">
+        Title="Add rule" Width="520" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Icon="pack://application:,,,/app.ico">
+    <Grid Margin="18">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -17,20 +18,20 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <TextBlock Text="App path" VerticalAlignment="Center"/>
-        <TextBox x:Name="tbApp" Grid.Column="1" Margin="0,2"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="empty = any app" Foreground="Gray" FontSize="11"/>
+        <TextBox x:Name="tbApp" Grid.Column="1" Margin="0,3"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="empty = any app" Style="{StaticResource MutedText}"/>
         <TextBlock Grid.Row="2" Text="Server" VerticalAlignment="Center"/>
-        <TextBox x:Name="tbServer" Grid.Row="2" Grid.Column="1" Margin="0,2"/>
-        <TextBlock Grid.Row="3" Grid.Column="1" Text="ip or hostname, empty = any server" Foreground="Gray" FontSize="11"/>
+        <TextBox x:Name="tbServer" Grid.Row="2" Grid.Column="1" Margin="0,3"/>
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="ip or hostname, empty = any server" Style="{StaticResource MutedText}"/>
         <TextBlock Grid.Row="4" Text="Port" VerticalAlignment="Center"/>
         <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
-            <TextBox x:Name="tbPort" Width="60" Margin="0,2"/>
-            <ComboBox x:Name="cmbAction" Width="80" Margin="12,0,0,0"/>
-            <ComboBox x:Name="cmbLife" Width="100" Margin="8,0,0,0"/>
+            <TextBox x:Name="tbPort" Width="64" Margin="0,3"/>
+            <ComboBox x:Name="cmbAction" Width="84" Margin="12,0,0,0"/>
+            <ComboBox x:Name="cmbLife" Width="104" Margin="8,0,0,0"/>
         </StackPanel>
-        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button x:Name="btnOk" Content="OK" Width="80" IsDefault="True" Margin="0,0,8,0"/>
-            <Button x:Name="btnCancel" Content="Cancel" Width="80" IsCancel="True"/>
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button x:Name="btnOk" Content="OK" Width="84" IsDefault="True" Margin="0,0,8,0"/>
+            <Button x:Name="btnCancel" Content="Cancel" Width="84" IsCancel="True"/>
         </StackPanel>
     </Grid>
 </Window>

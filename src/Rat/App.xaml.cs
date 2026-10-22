@@ -19,7 +19,7 @@ public partial class App : Application
 
         _tray = new WF.NotifyIcon
         {
-            Icon = System.Drawing.SystemIcons.Shield,
+            Icon = TrayIcon(),
             Text = "Rat - outbound connection monitor",
             Visible = true,
         };
@@ -28,6 +28,18 @@ public partial class App : Application
         menu.Items.Add("Exit", null, (_, _) => ExitApp());
         _tray.ContextMenuStrip = menu;
         _tray.DoubleClick += (_, _) => ShowMain();
+    }
+
+    static System.Drawing.Icon TrayIcon()
+    {
+        try
+        {
+            var path = Environment.ProcessPath;
+            var icon = path == null ? null : System.Drawing.Icon.ExtractAssociatedIcon(path);
+            if (icon != null) return icon;
+        }
+        catch { }
+        return System.Drawing.SystemIcons.Shield;
     }
 
     void ShowMain()

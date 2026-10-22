@@ -25,7 +25,7 @@ jobs:
         run: >
           dotnet publish src/Rat -c Release -r win-x64 --self-contained true
           -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-          -p:Version=1.0.1 -o publish
+          -p:Version=1.1.0 -o publish
 
       - name: Package
         run: |
@@ -36,7 +36,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "v1.0.1-windows.$env:GITHUB_RUN_NUMBER" }
+          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "v1.1.0-windows.$env:GITHUB_RUN_NUMBER" }
           $sha = $env:GITHUB_SHA.Substring(0, 7)
           $notes = @"
           Rat for Windows ($sha) - built by saboorsarem. Native WPF port of the Little Snitch-style monitor from ImanMontajabi/Rat.

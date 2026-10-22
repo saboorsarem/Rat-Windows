@@ -21,11 +21,17 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Fetch GeoIP database
+        run: ./scripts/fetch-geoip.ps1
+
+      - name: Test
+        run: dotnet test tests/Rat.Tests/Rat.Tests.csproj
+
       - name: Publish
         run: >
           dotnet publish src/Rat -c Release -r win-x64 --self-contained true
           -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-          -p:Version=1.1.0 -o publish
+          -p:Version=2.0.0 -o publish
 
       - name: Package
         run: |
@@ -36,14 +42,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "v1.1.0-windows.$env:GITHUB_RUN_NUMBER" }
+          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "v2.0.0-windows.$env:GITHUB_RUN_NUMBER" }
           $sha = $env:GITHUB_SHA.Substring(0, 7)
           $notes = @"
           Rat for Windows ($sha) - built by saboorsarem. Native WPF port of the Little Snitch-style monitor from ImanMontajabi/Rat.
 
-          Shows which app talks to which server, asks before unknown connections (allow/deny with scope and lifetime), and blocks denied servers with Windows Firewall. Sources: https://github.com/saboorsarem/Rat-Windows - macOS version: https://github.com/saboorsarem/Rat
+          Three-pane dashboard: apps with icons, search and quick allow/deny toggles, a world map with connection arcs (offline country-level GeoIP), and a summary panel with session traffic, top processes, domains and countries. Shows which app talks to which server, asks before unknown connections (allow/deny with scope and lifetime), and blocks denied servers with Windows Firewall. Sources: https://github.com/saboorsarem/Rat-Windows - macOS version: https://github.com/saboorsarem/Rat
 
           Run: download Rat-win-x64.exe (or the zip) and run it. Accept the UAC prompt - blocking needs admin. Windows 10/11 x64, IPv4 connections.
+
+          GeoIP data: DB-IP Lite (CC BY 4.0, https://db-ip.com/db). World outline: Natural Earth via johan/world.geo.json.
 
           Clean up firewall rules: netsh advfirewall firewall delete rule name=all group="Rat"
           "@

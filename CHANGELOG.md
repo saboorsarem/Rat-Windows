@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0
+
+- New three-pane dashboard matching the macOS original: apps with icons, search and quick deny/allow toggles, a world map with glowing connection arcs, and a Summary panel with session traffic and top processes/domains/countries.
+- Offline country-level GeoIP (DB-IP Lite, embedded gzipped) with a world outline drawn from Natural Earth GeoJSON.
+- Live traffic chart under the app list (last ~4 minutes, logarithmic scale) and session sent/received totals.
+- Connection inspector moved to its own window (double-click an app).
+- Build downloads the GeoIP database in CI and in `scripts/fetch-geoip.ps1`; without it the app still runs and shows a note on the map.
+
 ## 1.1.0
 
 - Dark UI theme across all windows, consistent typography and spacing.

@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Rat - network monitor"
-        Height="690" Width="1100" MinHeight="420" MinWidth="780"
+        Height="780" Width="1400" MinHeight="540" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/app.ico">
     <DockPanel>
@@ -19,7 +19,7 @@
                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <TextBlock Text="Rat" Style="{StaticResource Title}" Margin="9,0,0,0" VerticalAlignment="Center"/>
-                    <TextBlock Text="outbound connections" Style="{StaticResource MutedText}"
+                    <TextBlock Text="network monitor" Style="{StaticResource MutedText}"
                                Margin="9,2,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -35,29 +35,242 @@
                 BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="14,7">
             <TextBlock x:Name="tbStatus" Style="{StaticResource MutedText}" Text="Monitoring..."/>
         </Border>
+
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="326"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="304"/>
             </Grid.ColumnDefinitions>
-            <DataGrid x:Name="gridApps">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Application" Binding="{Binding Name}" Width="2*"/>
-                    <DataGridTextColumn Header="Connections" Binding="{Binding Connections}" Width="90"/>
-                    <DataGridTextColumn Header="Servers" Binding="{Binding Servers}" Width="2.4*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-            <GridSplitter Grid.Column="1" Width="10" HorizontalAlignment="Stretch" Background="Transparent"/>
-            <DataGrid x:Name="gridConns" Grid.Column="2">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Server" Binding="{Binding Remote}" Width="120"/>
-                    <DataGridTextColumn Header="Host" Binding="{Binding Host}" Width="2*"/>
-                    <DataGridTextColumn Header="Port" Binding="{Binding Port}" Width="60"/>
-                    <DataGridTextColumn Header="State" Binding="{Binding State}" Width="90"/>
-                    <DataGridTextColumn Header="Since" Binding="{Binding Since}" Width="130"/>
-                </DataGrid.Columns>
-            </DataGrid>
+
+            <Border Grid.Column="0" Background="{StaticResource Surface}" BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="10">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Top" Margin="0,0,0,8">
+                        <TextBox x:Name="txtSearch" Height="28" Padding="27,4,6,4" VerticalContentAlignment="Center"
+                                 ToolTip="Search applications"/>
+                        <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="13"
+                                   Foreground="{StaticResource Muted}" Margin="9,0,0,0"
+                                   VerticalAlignment="Center" IsHitTestVisible="False"/>
+                        <TextBlock x:Name="tbSearchHint" Text="Search applications"
+                                   Foreground="{StaticResource Muted}" FontSize="12" Margin="27,0,0,0"
+                                   VerticalAlignment="Center" IsHitTestVisible="False"/>
+                    </Grid>
+
+                    <Border DockPanel.Dock="Bottom" Height="112" Margin="0,8,0,0"
+                            BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,8,0,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Margin="0,0,0,4">
+                                <TextBlock Text="Traffic" Style="{StaticResource SubHeader}" Margin="0"/>
+                                <TextBlock x:Name="tbChartRate" Style="{StaticResource MutedText}" FontSize="11"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Canvas x:Name="chartCanvas" Grid.Row="1" Height="64" ClipToBounds="True"
+                                    Background="Transparent"/>
+                        </Grid>
+                    </Border>
+
+                    <DataGrid x:Name="gridApps" Background="Transparent" BorderThickness="0"
+                              GridLinesVisibility="None" RowHeight="30" AlternatingRowBackground="Transparent"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Application" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,7,0"/>
+                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Conns" Binding="{Binding Connections}" Width="48"/>
+                            <DataGridTemplateColumn Width="28">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="&#x2715;" ToolTip="Block this app" Click="Deny_Click">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource MiniButton}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding DenyActive}" Value="True">
+                                                            <Setter Property="Background" Value="#5A2623"/>
+                                                            <Setter Property="Foreground" Value="#F8D7D5"/>
+                                                            <Setter Property="BorderBrush" Value="#8C3A34"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="28">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="&#x2713;" ToolTip="Allow this app" Click="Allow_Click">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource MiniButton}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding AllowActive}" Value="True">
+                                                            <Setter Property="Background" Value="#1E5133"/>
+                                                            <Setter Property="Foreground" Value="#D9F5E4"/>
+                                                            <Setter Property="BorderBrush" Value="#2E7D4C"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Background="#0B0F16" BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1" CornerRadius="8" ClipToBounds="True">
+                <Grid>
+                    <Viewbox Stretch="Uniform" Margin="6">
+                        <Grid Width="1000" Height="500">
+                            <Path x:Name="mapPath" Fill="#151C27" Stroke="#25303F" StrokeThickness="0.8"/>
+                            <Canvas x:Name="arcLayer" Width="1000" Height="500"/>
+                        </Grid>
+                    </Viewbox>
+                    <TextBlock x:Name="txtMapNote" Visibility="Collapsed"
+                               Text="Geo database is not bundled in this build. Run scripts/fetch-geoip.ps1 and rebuild."
+                               Foreground="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap" MaxWidth="320"
+                               TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Top" Margin="14"
+                            Background="#B30F1115" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                            CornerRadius="5" Padding="8,3">
+                        <TextBlock Text="World map" Foreground="{StaticResource Fg}" FontSize="11" FontWeight="SemiBold"/>
+                    </Border>
+                    <TextBlock Text="GeoIP: DB-IP (CC BY 4.0)" Foreground="{StaticResource Muted}" FontSize="10"
+                               HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="14"/>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="4" Background="{StaticResource Surface}" BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1" CornerRadius="8">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14,12">
+                    <StackPanel>
+                        <TextBlock Text="Summary" Style="{StaticResource Title}"/>
+                        <TextBlock x:Name="tbSummarySub" Style="{StaticResource MutedText}" Margin="0,2,0,10"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Background="{StaticResource Surface2}" BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1" CornerRadius="6" Padding="10,8">
+                                <StackPanel>
+                                    <TextBlock Text="Sent" Style="{StaticResource MutedText}" FontSize="11"/>
+                                    <TextBlock x:Name="tbSent" FontSize="15" FontWeight="SemiBold" Foreground="#C9A8FF"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="2" Background="{StaticResource Surface2}" BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1" CornerRadius="6" Padding="10,8">
+                                <StackPanel>
+                                    <TextBlock Text="Received" Style="{StaticResource MutedText}" FontSize="11"/>
+                                    <TextBlock x:Name="tbRecv" FontSize="15" FontWeight="SemiBold" Foreground="#8FB8FF"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <TextBlock Text="Connections" Style="{StaticResource SectionHeader}"/>
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Active" Foreground="{StaticResource Muted}"/>
+                            <TextBlock x:Name="tbActive" Grid.Column="1" FontWeight="SemiBold"/>
+                        </Grid>
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Blocked servers" Foreground="{StaticResource Muted}"/>
+                            <TextBlock x:Name="tbBlocked" Grid.Column="1" FontWeight="SemiBold"/>
+                        </Grid>
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Rules" Foreground="{StaticResource Muted}"/>
+                            <TextBlock x:Name="tbRules" Grid.Column="1" FontWeight="SemiBold"/>
+                        </Grid>
+
+                        <TextBlock Text="Statistics" Style="{StaticResource SectionHeader}"/>
+                        <TextBlock Text="Top processes" Style="{StaticResource SubHeader}"/>
+                        <ItemsControl x:Name="icProcs">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Image Source="{Binding Icon}" Width="14" Height="14" Margin="0,0,7,0"
+                                               VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Detail}" Foreground="{StaticResource Muted}"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock Text="Top domains" Style="{StaticResource SubHeader}"/>
+                        <ItemsControl x:Name="icDomains">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Detail}" Foreground="{StaticResource Muted}"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock Text="Top countries" Style="{StaticResource SubHeader}"/>
+                        <ItemsControl x:Name="icCountries">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Detail}" Foreground="{StaticResource Muted}"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
         </Grid>
     </DockPanel>
 </Window>

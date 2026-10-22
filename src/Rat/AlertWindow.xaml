@@ -3,30 +3,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="New connection" Width="500" SizeToContent="Height"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False"
+        Background="{StaticResource Bg}"
         Icon="pack://application:,,,/app.ico">
-    <StackPanel Margin="20">
-        <TextBlock Text="New connection" Style="{StaticResource Title}"/>
-        <TextBlock x:Name="tbApp" Margin="0,10,0,0" FontWeight="SemiBold" TextWrapping="Wrap"/>
-        <TextBlock x:Name="tbConn" Style="{StaticResource MutedText}" Margin="0,4,0,14" TextWrapping="Wrap"/>
-        <TextBlock Text="Scope" Style="{StaticResource MutedText}"/>
-        <ComboBox x:Name="cmbScope" Margin="0,4,0,10" Padding="6,4">
-            <ComboBoxItem Content="This app, any server" IsSelected="True"/>
-            <ComboBoxItem Content="This app, this server"/>
-            <ComboBoxItem Content="Any app, this server"/>
-            <ComboBoxItem Content="This app, this port"/>
-        </ComboBox>
-        <TextBlock Text="Lifetime" Style="{StaticResource MutedText}"/>
-        <StackPanel Orientation="Horizontal" Margin="0,4,0,14">
-            <RadioButton x:Name="rbOnce" Content="Once" Margin="0,0,14,0"/>
-            <RadioButton x:Name="rbSession" Content="Until quit" Margin="0,0,14,0"/>
-            <RadioButton x:Name="rbForever" Content="Forever" IsChecked="True"/>
+    <Border Background="{StaticResource Bg}" Padding="20">
+        <StackPanel>
+            <TextBlock Text="New connection" Style="{StaticResource Title}"/>
+            <TextBlock x:Name="tbApp" Margin="0,10,0,0" FontWeight="SemiBold" TextWrapping="Wrap"/>
+            <TextBlock x:Name="tbConn" Style="{StaticResource MutedText}" Margin="0,4,0,14" TextWrapping="Wrap"/>
+            <TextBlock Text="Scope" Style="{StaticResource MutedText}"/>
+            <ComboBox x:Name="cmbScope" Margin="0,4,0,10" Padding="6,4">
+                <ComboBoxItem Content="This app, any server" IsSelected="True"/>
+                <ComboBoxItem Content="This app, this server"/>
+                <ComboBoxItem Content="Any app, this server"/>
+                <ComboBoxItem Content="This app, this port"/>
+            </ComboBox>
+            <TextBlock Text="Lifetime" Style="{StaticResource MutedText}"/>
+            <StackPanel Orientation="Horizontal" Margin="0,4,0,14">
+                <RadioButton x:Name="rbOnce" Content="Once" Margin="0,0,14,0"/>
+                <RadioButton x:Name="rbSession" Content="Until quit" Margin="0,0,14,0"/>
+                <RadioButton x:Name="rbForever" Content="Forever" IsChecked="True"/>
+            </StackPanel>
+            <TextBlock Text="Deny also blocks this server address for every app (Windows Firewall, outbound) and cuts the live connection."
+                       Foreground="{StaticResource Danger}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,14"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="btnAllow" Content="Allow" Width="110" Style="{StaticResource AllowButton}"
+                        IsDefault="True" Margin="0,0,8,0"/>
+                <Button x:Name="btnDeny" Content="Deny" Width="110" Style="{StaticResource DenyButton}"/>
+            </StackPanel>
         </StackPanel>
-        <TextBlock Text="Deny also blocks this server address for every app (Windows Firewall, outbound) and cuts the live connection."
-                   Foreground="{StaticResource Danger}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,14"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="btnAllow" Content="Allow" Width="110" Style="{StaticResource AllowButton}"
-                    IsDefault="True" Margin="0,0,8,0"/>
-            <Button x:Name="btnDeny" Content="Deny" Width="110" Style="{StaticResource DenyButton}"/>
-        </StackPanel>
-    </StackPanel>
+    </Border>
 </Window>

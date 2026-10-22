@@ -4,8 +4,9 @@
         Title="Rat - network monitor"
         Height="760" Width="1280" MinHeight="520" MinWidth="900"
         WindowStartupLocation="CenterScreen"
+        Background="{StaticResource Bg}"
         Icon="pack://application:,,,/app.ico">
-    <DockPanel>
+    <DockPanel Background="{StaticResource Bg}">
         <Border DockPanel.Dock="Top" Background="{StaticResource Surface}"
                 BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="16,10">
             <Grid>

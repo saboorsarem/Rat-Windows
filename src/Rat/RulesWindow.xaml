@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Rules" Width="880" Height="520" MinHeight="320" MinWidth="640"
         WindowStartupLocation="CenterOwner"
+        Background="{StaticResource Bg}"
         Icon="pack://application:,,,/app.ico">
-    <DockPanel>
+    <DockPanel Background="{StaticResource Bg}">
         <Border DockPanel.Dock="Top" Background="{StaticResource Surface}"
                 BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="14,10">
             <StackPanel Orientation="Horizontal">

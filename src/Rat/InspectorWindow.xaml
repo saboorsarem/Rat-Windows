@@ -4,8 +4,9 @@
         Title="Rat - inspector"
         Height="430" Width="760" MinHeight="280" MinWidth="560"
         WindowStartupLocation="CenterOwner"
+        Background="{StaticResource Bg}"
         Icon="pack://application:,,,/app.ico">
-    <DockPanel>
+    <DockPanel Background="{StaticResource Bg}">
         <Border DockPanel.Dock="Top" Background="{StaticResource Surface}"
                 BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="14,10">
             <StackPanel>

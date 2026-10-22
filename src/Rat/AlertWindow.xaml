@@ -1,0 +1,29 @@
+<Window x:Class="Rat.AlertWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="New connection" Width="480" SizeToContent="Height"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False">
+    <StackPanel Margin="14">
+        <TextBlock x:Name="tbApp" FontWeight="Bold" FontSize="14" TextWrapping="Wrap"/>
+        <TextBlock x:Name="tbConn" Foreground="Gray" TextWrapping="Wrap" Margin="0,4,0,10"/>
+        <TextBlock Text="Scope:" Margin="0,0,0,2"/>
+        <ComboBox x:Name="cmbScope" Margin="0,2,0,8">
+            <ComboBoxItem Content="This app, any server" IsSelected="True"/>
+            <ComboBoxItem Content="This app, this server"/>
+            <ComboBoxItem Content="Any app, this server"/>
+            <ComboBoxItem Content="This app, this port"/>
+        </ComboBox>
+        <TextBlock Text="Lifetime:" Margin="0,0,0,2"/>
+        <StackPanel Orientation="Horizontal" Margin="0,2,0,10">
+            <RadioButton x:Name="rbOnce" Content="Once" Margin="0,0,14,0"/>
+            <RadioButton x:Name="rbSession" Content="Until quit" Margin="0,0,14,0"/>
+            <RadioButton x:Name="rbForever" Content="Forever" IsChecked="True"/>
+        </StackPanel>
+        <TextBlock Text="Deny also blocks this server address for every app (Windows Firewall, outbound) and cuts the live connection."
+                   Foreground="DarkRed" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnAllow" Content="Allow" Width="90" IsDefault="True" Background="#dff0d8" Margin="0,0,8,0"/>
+            <Button x:Name="btnDeny" Content="Deny" Width="90" Background="#f2dede"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

@@ -17,6 +17,16 @@ Every release ships a single self-contained executable — no .NET install, no s
 
 Run it, accept the UAC prompt (blocking needs admin), and the monitor opens with a tray icon. Windows 10/11 x64.
 
+### SmartScreen on first launch
+
+The executable is not code-signed yet, so Windows may show **"Windows protected your PC"**. This is not a virus detection — it is SmartScreen reacting to an unsigned binary. Click **More info → Run anyway**, or remove the "downloaded from the internet" mark once:
+
+```
+Unblock-File .\Rat-win-x64.exe
+```
+
+Only code signing (a CA certificate, or a free open-source program such as [SignPath Foundation](https://signpath.org/)) removes this prompt for every user.
+
 ## The dashboard
 
 Three panes, like the macOS original:

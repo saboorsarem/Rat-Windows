@@ -1,0 +1,50 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish
+        run: >
+          dotnet publish src/Rat -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:Version=1.0.1 -o publish
+
+      - name: Package
+        run: |
+          Copy-Item publish/Rat.exe Rat-win-x64.exe
+          Compress-Archive -Path publish/Rat.exe -DestinationPath Rat-win-x64.zip
+
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "v1.0.1-windows.$env:GITHUB_RUN_NUMBER" }
+          $sha = $env:GITHUB_SHA.Substring(0, 7)
+          $notes = @"
+          Rat for Windows ($sha) - built by saboorsarem. Native WPF port of the Little Snitch-style monitor from ImanMontajabi/Rat.
+
+          Shows which app talks to which server, asks before unknown connections (allow/deny with scope and lifetime), and blocks denied servers with Windows Firewall. Sources: https://github.com/saboorsarem/Rat-Windows - macOS version: https://github.com/saboorsarem/Rat
+
+          Run: download Rat-win-x64.exe (or the zip) and run it. Accept the UAC prompt - blocking needs admin. Windows 10/11 x64, IPv4 connections.
+
+          Clean up firewall rules: netsh advfirewall firewall delete rule name=all group="Rat"
+          "@
+          gh release create $tag Rat-win-x64.exe Rat-win-x64.zip --title "Rat for Windows - built by saboorsarem" --notes $notes

@@ -2,6 +2,17 @@
 
 A network monitor and application firewall for **Windows**, ported from [ImanMontajabi/Rat](https://github.com/ImanMontajabi/Rat) (a Little Snitch-style monitor for macOS, MIT).
 
+## Download
+
+Releases carry `Rat-win-x64.exe` — one file, self-contained, no .NET install needed:
+
+```
+https://github.com/saboorsarem/Rat-Windows/releases/latest/download/Rat-win-x64.exe
+```
+
+Unzip-free: run it, accept the UAC prompt (blocking needs admin), and a monitor window plus tray icon appear. The macOS original is at [saboorsarem/Rat](https://github.com/saboorsarem/Rat).
+
+
 > **The name** comes from the upstream project: "monitor your network and find the Rat." This is a **defensive** tool — it watches the outgoing connections of your own apps. It has no relation to remote access trojans.
 
 It shows which app talks to which server, asks before unknown connections, lets you allow or deny them with rules and lifetimes, and blocks denied servers with **Windows Firewall** plus a live connection cut.

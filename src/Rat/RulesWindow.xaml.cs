@@ -35,6 +35,7 @@ public partial class RulesWindow : Window
     public RulesWindow(Store store)
     {
         InitializeComponent();
+        DarkTitleBar.Apply(this);
         _store = store;
         Reload();
         btnAdd.Click += (_, _) =>

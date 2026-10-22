@@ -10,6 +10,7 @@ public partial class RuleEditWindow : Window
     public RuleEditWindow()
     {
         InitializeComponent();
+        DarkTitleBar.Apply(this);
         cmbAction.ItemsSource = Enum.GetValues<RuleAction>();
         cmbAction.SelectedIndex = 1; // deny
         cmbLife.ItemsSource = new[] { RuleLifetime.Session, RuleLifetime.Forever };

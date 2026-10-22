@@ -71,6 +71,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        DarkTitleBar.Apply(this);
+        var work = SystemParameters.WorkArea;
+        Width = Math.Min(Width, Math.Max(MinWidth, work.Width - 40));
+        Height = Math.Min(Height, Math.Max(MinHeight, work.Height - 40));
         chkAlert.IsChecked = _store.AlertMode;
         chkAlert.Checked += (_, _) => { _store.AlertMode = true; _store.SaveSettings(); };
         chkAlert.Unchecked += (_, _) => { _store.AlertMode = false; _store.SaveSettings(); };
@@ -263,7 +267,7 @@ public partial class MainWindow : Window
             var domain = DomainOf(host);
             if (domain != null) domains[domain] = domains.GetValueOrDefault(domain) + 1;
             var code = GeoIp.Lookup(c.Remote);
-            if (code != null) countries[code] = countries.GetValueOrDefault(code) + 1;
+            if (code != null && code != "ZZ") countries[code] = countries.GetValueOrDefault(code) + 1;
         }
 
         _topDomains.Clear();

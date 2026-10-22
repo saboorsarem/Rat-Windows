@@ -11,6 +11,7 @@ public partial class AlertWindow : Window
     public AlertWindow(Connection c)
     {
         InitializeComponent();
+        DarkTitleBar.Apply(this);
         _c = c;
         tbApp.Text = $"{c.ProcessName} (pid {c.Pid})";
         tbConn.Text = $"{c.ProcessPath ?? "path unknown"}  ->  {c.Remote}:{c.RemotePort}  [{c.State}]";
